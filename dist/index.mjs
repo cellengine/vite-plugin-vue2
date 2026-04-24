@@ -859,6 +859,9 @@ var __component__ = /*#__PURE__*/__normalizer(
   output.push(`export default __component__.exports`);
   let resolvedCode = output.join("\n");
   if ((descriptor.script?.lang === "ts" || descriptor.scriptSetup?.lang === "ts") && !descriptor.script?.src) {
+    const inputMap = resolvedMap
+      ? Object.fromEntries(Object.entries(resolvedMap).filter(([, v]) => v !== null))
+      : void 0;
     const { code: code2, map } = await transformWithOxc(
       resolvedCode,
       filename,
@@ -866,7 +869,8 @@ var __component__ = /*#__PURE__*/__normalizer(
         lang: "ts",
         target: "esnext",
         sourcemap: options.sourceMap
-      }
+      },
+      inputMap
     );
     resolvedCode = code2;
     resolvedMap = resolvedMap ? map : resolvedMap;

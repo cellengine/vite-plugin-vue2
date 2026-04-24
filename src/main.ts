@@ -146,6 +146,13 @@ var __component__ = /*#__PURE__*/__normalizer(
       descriptor.scriptSetup?.lang === 'ts') &&
     !descriptor.script?.src // only normal script can have src
   ) {
+    // OXC's Rust binding rejects null values on SourceMap fields (e.g. file).
+    // Strip them so null becomes absent rather than causing a type error.
+    const inputMap = resolvedMap
+      ? (Object.fromEntries(
+          Object.entries(resolvedMap).filter(([, v]) => v !== null)
+        ) as any)
+      : undefined
     const { code, map } = await transformWithOxc(
       resolvedCode,
       filename,
@@ -153,7 +160,8 @@ var __component__ = /*#__PURE__*/__normalizer(
         lang: 'ts',
         target: 'esnext',
         sourcemap: options.sourceMap
-      }
+      },
+      inputMap
     )
     resolvedCode = code
     resolvedMap = resolvedMap ? (map as any) : resolvedMap
