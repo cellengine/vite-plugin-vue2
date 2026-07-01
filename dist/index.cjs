@@ -868,9 +868,9 @@ var __component__ = /*#__PURE__*/__normalizer(
   output.push(`export default __component__.exports`);
   let resolvedCode = output.join("\n");
   if ((descriptor.script?.lang === "ts" || descriptor.scriptSetup?.lang === "ts") && !descriptor.script?.src) {
-    const inputMap = resolvedMap
-      ? Object.fromEntries(Object.entries(resolvedMap).filter(([, v]) => v !== null))
-      : void 0;
+    const inputMap = resolvedMap ? Object.fromEntries(
+      Object.entries(resolvedMap).filter(([, v]) => v !== null)
+    ) : void 0;
     const { code: code2, map } = await vite.transformWithOxc(
       resolvedCode,
       filename,
@@ -1147,12 +1147,6 @@ function vuePlugin(rawOptions = {}) {
         cssDevSourcemap: config.css?.devSourcemap ?? false,
         devToolsEnabled: !config.isProduction
       };
-      if (!config.resolve.alias.some(({ find }) => find === "vue")) {
-        config.resolve.alias.push({
-          find: "vue",
-          replacement: "vue/dist/vue.runtime.esm.js"
-        });
-      }
     },
     configureServer(server) {
       options.devServer = server;
